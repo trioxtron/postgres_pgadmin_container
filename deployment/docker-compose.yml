@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:15
+    hostname: postgres
     container_name: minimal-postgres
     ports:
       - 5432:5432
@@ -13,7 +14,7 @@ services:
       - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
       - minimal-db-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "discord_bot_db"]
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "minimal_db"]
       interval: 5s
       timeout: 3s
       retries: 5
