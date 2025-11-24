@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:15
+    container_name: minimal-postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: minimal_db 
+      POSTGRES_PASSWORD: test1234 
+      TZ: Europe/Berlin
+    volumes:
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - minimal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "discord_bot_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    logging:
+      driver: none
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: minimal-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.de
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    volumes:
+      - minimal-pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      db:
+        condition: service_healthy
+
+  migrate:
+    image: migrate/migrate
+    container_name: minimal-db-migration
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ../db/migrations:/migrations
+    entrypoint:
+      [
+        "migrate",
+        "-path",
+        "/migrations",
+        "-database",
+        "postgres://postgres:test1234@postgres:5432/minimal_db?sslmode=disable",
+        "up",
+      ]
+
+volumes:
+  minimal-db-data:
+  minimal-pgadmin-data:
+
