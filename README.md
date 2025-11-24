@@ -9,7 +9,7 @@ This repository provides a minimal setup for running PostgreSQL, PGAdmin, and a 
 ## Setup Instructions
 1. Clone the repository:
    ```bash
-   git clone
+   git clone https://github.com/trioxtron/postgres_pgadmin_container
    ```
 2. Navigate to the project directory:
    ```bash
