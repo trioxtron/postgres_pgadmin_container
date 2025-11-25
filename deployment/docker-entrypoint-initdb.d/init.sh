@@ -3,7 +3,7 @@
 
 sudo -u postgres -i
 
-createdb discord_bot_db
+createdb minimal_db
 
 # necessary to prevent errors
 # FATAL: role "root" does not exist
